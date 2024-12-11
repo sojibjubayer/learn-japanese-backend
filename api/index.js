@@ -257,7 +257,6 @@ app.get('/api/dashboard/lessons', async (req, res) => {
 });
 //UPDATE Lesson
 app.put('/api/lessons/update/:id', async (req, res) => {
-    console.log(req.params, req.body);  
 
     try {
         const { id } = req.params;  
@@ -287,7 +286,7 @@ app.put('/api/lessons/update/:id', async (req, res) => {
 
 // DELETE a lesson
 app.delete('/api/lessons/delete/:id', async (req, res) => {
-    console.log(req.params)
+
     try {
         const { id } = req.params;  
         const lessonCollection = client.db('japanese-db').collection('lessons');  
@@ -304,6 +303,87 @@ app.delete('/api/lessons/delete/:id', async (req, res) => {
         res.status(500).send({ message: 'Internal Server Error' });
     }
 });
+
+
+//GET ALL VOCABULARIES
+app.get('/api/dashboard/vocabularies', async (req, res) => {
+    try {
+        const { lessonNumber } = req.query; // Optional filtering based on lessonNo
+    
+        const vocabCollection = client.db('japanese-db').collection('vocabularies');
+    
+        // If a lessonNo is provided, filter the vocabularies by lessonNo
+        const query = lessonNumber ? { lessonNumber: parseInt(lessonNumber) } : {};
+    
+        const vocabularies = await vocabCollection.find(query).toArray();
+       
+    
+        res.status(200).send(vocabularies);
+    } catch (error) {
+      console.error('Error fetching vocabularies:', error);
+      res.status(500).send({ message: 'Internal Server Error' });
+    }
+  });
+
+  //UPDATE Vocabularies
+app.put('/api/dashboard/vocabularies/update/:id', async (req, res) => {
+   
+
+    try {
+        const { id } = req.params;  
+        const { word,
+            pronunciation,
+            meaning,
+            whenToSay,
+            lessonNumber } = req.body;  
+
+        // if (!lessonNumber || !lessonName) {
+        //     return res.status(400).send({ message: 'Lesson number and lesson name are required' });
+        // }
+
+        const vocabularyCollection = client.db('japanese-db').collection('vocabularies');  
+        
+        const result = await vocabularyCollection.updateOne(
+            { _id: new ObjectId(id) },  
+            { $set: { word,
+                pronunciation,
+                meaning,
+                whenToSay,
+                lessonNumber} }  
+        );
+
+        if (result.matchedCount === 0) {
+            return res.status(404).send({ message: 'Vocabulary not found' });
+        }
+
+        res.status(200).send({ message: 'Vocabulary updated successfully' });
+    } catch (error) {
+        console.error('Error updating lesson:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+// DELETE a vocabulary
+app.delete('/api/dashboard/vocabularies/delete/:id', async (req, res) => {
+
+    try {
+        const { id } = req.params;  
+        const vocabularyCollection = client.db('japanese-db').collection('vocabularies');  
+        
+        const result = await vocabularyCollection.deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ message: 'Lesson not found' });
+        }
+
+        res.status(200).send({ message: 'Lesson deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting lesson:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+  
 
 
 
