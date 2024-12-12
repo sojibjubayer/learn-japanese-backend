@@ -458,6 +458,26 @@ app.get('/api/getTutorials', async (req, res) => {
     }
 });
 
+// DELETE a TUTORIAL
+app.delete('/api/deleteTutorial/:id', async (req, res) => {
+
+    try {
+        const { id } = req.params;  
+        const tutorialCollection = client.db('japanese-db').collection('tutorials');  
+        
+        const result = await tutorialCollection.deleteOne({ _id: new ObjectId(id) });
+
+        if (result.deletedCount === 0) {
+            return res.status(404).send({ message: 'Tutorial not found' });
+        }
+
+        res.status(200).send({ message: 'Tutorial deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting lesson:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
 
 
 
