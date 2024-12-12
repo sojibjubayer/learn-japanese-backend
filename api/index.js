@@ -11,7 +11,7 @@ const app = express();
 
 // Middleware setup
 app.use(cors({
-    origin: ['http://localhost:5173'], 
+    origin: ['http://localhost:5173','https://learn-japanese-2024.web.app'], 
     credentials: true
 }));
 app.use(express.json());
@@ -426,7 +426,7 @@ app.get('/', (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
-});
+// const PORT = process.env.PORT || 5000;
+// app.listen(PORT, () => {
+//     console.log(`Server running on http://localhost:${PORT}`);
+// });
