@@ -313,7 +313,6 @@ app.get('/api/dashboard/vocabularies', async (req, res) => {
     
         const vocabCollection = client.db('japanese-db').collection('vocabularies');
     
-        // If a lessonNo is provided, filter the vocabularies by lessonNo
         const query = lessonNumber ? { lessonNumber: parseInt(lessonNumber) } : {};
     
         const vocabularies = await vocabCollection.find(query).toArray();
@@ -396,7 +395,7 @@ app.get('/api/users/lessons', async (req, res) => {
         res.status(500).send({ message: 'Internal Server Error' });
     }
 });
-// Get vocabularies by Lesson Noapp.get('/api/users/lessons/:lessonNumber', async (req, res) => {
+// Get vocabularies by Lesson No
     app.get('/api/vocabularies/:lessonNumber', async (req, res) => {
     try {
         const { lessonNumber } = req.params;
@@ -500,10 +499,6 @@ app.get('/api/user/:id', async (req, res) => {
   
 
 
-
-
-
-
 // Root route
 app.get('/', (req, res) => {
     res.send('Server is running');
@@ -512,9 +507,3 @@ app.get('/', (req, res) => {
 // Export the app for Vercel
 module.exports = app;
 
-// for local server 
-const PORT = 5000;
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
