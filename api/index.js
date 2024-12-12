@@ -478,6 +478,27 @@ app.delete('/api/deleteTutorial/:id', async (req, res) => {
     }
 });
 
+// GET USER IMAGE
+app.get('/api/user/:id', async (req, res) => {
+    const userId = req.params.id;
+    
+  
+    try {
+      const userCollection = client.db('japanese-db').collection('users');
+      const user = await userCollection.findOne({ _id: new ObjectId(userId) });
+      console.log(user)
+      if (!user) {
+        return res.status(404).send({ message: 'User not found' });
+      }
+  
+      res.status(200).send({ image: user.photoUrl });
+    } catch (error) {
+      console.error('Error fetching user:', error);
+      res.status(500).send({ message: 'Internal Server Error' });
+    }
+  });
+  
+
 
 
 
