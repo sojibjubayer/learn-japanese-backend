@@ -443,6 +443,22 @@ app.post('/api/postTutorials', async (req, res) => {
     }
 });
 
+// GET Tutorials 
+app.get('/api/getTutorials', async (req, res) => {
+    try {
+        const tutorialCollection = client.db('japanese-db').collection('tutorials');
+
+        // Fetch all tutorials
+        const tutorials = await tutorialCollection.find({}).toArray();
+
+        res.status(200).send({ success: true, tutorials });
+    } catch (error) {
+        console.error('Error fetching tutorials:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+
 
 
 
