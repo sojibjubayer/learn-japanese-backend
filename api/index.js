@@ -418,6 +418,33 @@ app.get('/api/users/lessons', async (req, res) => {
 });
 
 
+//POST Tutorial
+app.post('/api/postTutorials', async (req, res) => {
+    const { title, link } = req.body;
+
+    // Validation
+    if (!title || !link) {
+        return res.status(400).send({ message: 'Title and video link are required' });
+    }
+
+    try {
+        const tutorialCollection = client.db('japanese-db').collection('tutorials');
+
+        // Insert the new tutorial
+        const result = await tutorialCollection.insertOne({
+            title,
+            link,
+        });
+
+        res.status(201).send({ success: true, result });
+    } catch (error) {
+        console.error('Error adding tutorial:', error);
+        res.status(500).send({ message: 'Internal Server Error' });
+    }
+});
+
+
+
 
 
 // Root route
@@ -427,3 +454,10 @@ app.get('/', (req, res) => {
 
 // Export the app for Vercel
 module.exports = app;
+
+// for local server 
+const PORT = 5000;
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
